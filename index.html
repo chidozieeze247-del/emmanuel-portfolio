@@ -1088,6 +1088,536 @@
 
 
 
+
+<!-- TESTIMONIALS SECTION -->
+<section class="testimonials-section section-padding" id="testimonials">
+
+    <div class="testimonials-container">
+
+        <!-- Section Heading -->
+        <div class="testimonials-heading reveal">
+            <span class="section-eyebrow">
+                <span class="eyebrow-line"></span>
+                CLIENT TESTIMONIALS
+            </span>
+
+            <div class="testimonials-heading-row">
+                <div>
+                    <h2 class="testimonials-title">
+                        Don't just take
+                        <span class="gradient-text">my word for it.</span>
+                    </h2>
+
+                    <p class="testimonials-description">
+                        Every project is a collaboration. Here's what people
+                        have to say about working with me.
+                    </p>
+                </div>
+
+                <button class="testimonial-share-btn" id="openTestimonialForm">
+                    <span>Share your experience</span>
+                    <i class="fas fa-arrow-up-right-from-square"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Testimonial Slider -->
+        <div class="testimonials-slider-wrapper">
+
+            <button class="testimonial-arrow testimonial-prev"
+                    id="testimonialPrev"
+                    aria-label="Previous testimonials">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+
+            <div class="testimonials-slider" id="testimonialsSlider">
+                <div class="testimonials-track" id="testimonialsTrack">
+
+                    <!-- Approved testimonials will be loaded here by JavaScript -->
+
+                    <div class="testimonial-empty-state" id="testimonialEmpty">
+                        <div class="testimonial-empty-icon">
+                            <i class="far fa-comments"></i>
+                        </div>
+                        <h3>Your feedback matters.</h3>
+                        <p>
+                            Be among the first to share your experience
+                            working with me.
+                        </p>
+                        <button class="testimonial-empty-btn"
+                                id="emptyTestimonialBtn">
+                            Write a testimonial
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <button class="testimonial-arrow testimonial-next"
+                    id="testimonialNext"
+                    aria-label="Next testimonials">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+        <!-- Slider Footer -->
+        <div class="testimonials-footer">
+            <div class="testimonial-slider-note">
+                <span class="testimonial-live-dot"></span>
+                Real experiences. Honest feedback.
+            </div>
+
+            <div class="testimonial-slider-controls">
+                <span id="testimonialCounter">01 / 01</span>
+                <div class="testimonial-progress">
+                    <span id="testimonialProgress"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- TESTIMONIAL SUBMISSION MODAL -->
+<div class="testimonial-modal" id="testimonialModal"
+     aria-hidden="true">
+
+    <div class="testimonial-modal-overlay"
+         id="testimonialModalOverlay"></div>
+
+    <div class="testimonial-modal-content"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="testimonialFormTitle">
+
+        <button class="testimonial-modal-close"
+                id="closeTestimonialForm"
+                aria-label="Close form">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="testimonial-form-heading">
+            <span class="section-eyebrow">
+                YOUR EXPERIENCE
+            </span>
+
+            <h2 id="testimonialFormTitle">
+                Let's hear your
+                <span class="gradient-text">story.</span>
+            </h2>
+
+            <p>
+                I'd love to know what it was like working together.
+                Your feedback helps me grow and improve.
+            </p>
+        </div>
+
+        <form id="testimonialForm">
+
+            <div class="testimonial-form-grid">
+
+                <div class="testimonial-field">
+                    <label for="clientName">Your name *</label>
+                    <input type="text" id="clientName"
+                           placeholder="e.g. Emmanuel Chiedozie"
+                           maxlength="70" required>
+                </div>
+
+                <div class="testimonial-field">
+                    <label for="clientRole">Your role *</label>
+                    <input type="text" id="clientRole"
+                           placeholder="e.g. Founder"
+                           maxlength="80" required>
+                </div>
+
+            </div>
+
+            <div class="testimonial-field">
+                <label for="clientCompany">Company / Business</label>
+                <input type="text" id="clientCompany"
+                       placeholder="e.g. Acme Studio"
+                       maxlength="100">
+            </div>
+
+            <div class="testimonial-field">
+                <label for="projectType">What did we work on?</label>
+                <select id="projectType">
+                    <option value="">Select a project type</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                    <option value="Graphic Design">Graphic Design</option>
+                    <option value="Digital Marketing">Digital Marketing</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="testimonial-field">
+                <label>Your rating *</label>
+
+                <div class="testimonial-rating-input"
+                     id="testimonialRating"
+                     role="radiogroup"
+                     aria-label="Choose a rating">
+
+                    <button type="button" data-rating="1"
+                            aria-label="1 star">★</button>
+                    <button type="button" data-rating="2"
+                            aria-label="2 stars">★</button>
+                    <button type="button" data-rating="3"
+                            aria-label="3 stars">★</button>
+                    <button type="button" data-rating="4"
+                            aria-label="4 stars">★</button>
+                    <button type="button" data-rating="5"
+                            aria-label="5 stars">★</button>
+
+                </div>
+                <input type="hidden" id="clientRating" value="0">
+            </div>
+
+            <div class="testimonial-field">
+                <label for="clientMessage">Your testimonial *</label>
+                <textarea id="clientMessage"
+                          rows="5"
+                          maxlength="1000"
+                          placeholder="Tell me about your experience..."
+                          required></textarea>
+                <div class="testimonial-character-count">
+                    <span id="testimonialCharCount">0</span>/1000
+                </div>
+            </div>
+
+            <div class="testimonial-field">
+                <label for="clientPhoto">Your photo (optional)</label>
+
+                <label class="testimonial-upload" for="clientPhoto">
+                    <span class="testimonial-upload-icon">
+                        <i class="fas fa-cloud-arrow-up"></i>
+                    </span>
+                    <span class="testimonial-upload-text">
+                        <strong>Click to upload a photo</strong>
+                        <small>JPG, PNG or WebP · Maximum 2MB</small>
+                    </span>
+                    <span class="testimonial-upload-name"
+                          id="testimonialFileName">No file selected</span>
+                </label>
+
+                <input type="file" id="clientPhoto"
+                       accept="image/jpeg,image/png,image/webp"
+                       hidden>
+            </div>
+
+            <label class="testimonial-consent">
+                <input type="checkbox" id="testimonialConsent" required>
+                <span>
+                    I agree to have my testimonial displayed on this portfolio
+                    after it has been reviewed.
+                </span>
+            </label>
+
+            <button type="submit" class="testimonial-submit-btn"
+                    id="testimonialSubmitBtn">
+                <span>Submit testimonial</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <p class="testimonial-form-notice" id="testimonialFormNotice"
+               aria-live="polite">
+                Your testimonial will be reviewed before it appears publicly.
+            </p>
+
+        </form>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- FAQ SECTION -->
+<section class="faq-section" id="faq">
+    <div class="faq-container">
+
+        <!-- Section Header -->
+        <div class="faq-header">
+            <span class="faq-eyebrow">
+                <span class="faq-eyebrow-line"></span>
+                FREQUENTLY ASKED QUESTIONS
+            </span>
+
+            <h2 class="faq-title">
+                Got questions?
+                <span>I've got answers.</span>
+            </h2>
+
+            <p class="faq-subtitle">
+                Everything you need to know about my services,
+                how I work, and what it's like collaborating with me.
+            </p>
+        </div>
+
+        <!-- FAQ Accordion -->
+        <div class="faq-list">
+
+            <!-- Question 1 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">01</span>
+                    <span class="faq-question-text">
+                        Who am I and what do I do?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            I'm a multidisciplinary digital professional
+                            passionate about building meaningful digital
+                            experiences. My work spans web development,
+                            UI/UX design, graphic design, and digital
+                            marketing, helping businesses build and grow
+                            their online presence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">02</span>
+                    <span class="faq-question-text">
+                        What services do I offer?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            I offer website design and development,
+                            UI/UX design, graphic design, and digital
+                            marketing services, including email marketing
+                            and Google Ads. My goal is to create solutions
+                            that look great, work effectively, and help
+                            businesses achieve their goals.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">03</span>
+                    <span class="faq-question-text">
+                        Who do I work with?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            I work with startups, entrepreneurs, small
+                            businesses, and established brands looking
+                            to create, improve, or grow their digital
+                            presence. Every project is an opportunity
+                            to understand a unique vision and turn it
+                            into a practical solution.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">04</span>
+                    <span class="faq-question-text">
+                        How does the project process work?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            Every project begins with a conversation
+                            about your goals, ideas, and requirements.
+                            I then plan the work, develop the solution,
+                            share progress for feedback, and refine the
+                            final result to align with the agreed
+                            expectations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">05</span>
+                    <span class="faq-question-text">
+                        How long does a project take?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            Timelines depend on the type, size, and
+                            complexity of the project. Once I understand
+                            what you need, I'll provide a realistic
+                            timeline and keep you updated throughout
+                            the process.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">06</span>
+                    <span class="faq-question-text">
+                        Do you offer revisions?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            Yes. Feedback is an important part of
+                            delivering quality work. Revisions are
+                            handled according to the agreed project
+                            scope to ensure the final deliverables
+                            meet your expectations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">07</span>
+                    <span class="faq-question-text">
+                        How much do your services cost?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            Pricing depends on the project requirements,
+                            complexity, and expected deliverables.
+                            Share your project details with me, and
+                            I'll provide a suitable quote based on
+                            the work involved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">08</span>
+                    <span class="faq-question-text">
+                        Do you work with international clients?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            Absolutely! I'm open to collaborating with
+                            clients from different parts of the world.
+                            We can communicate remotely, share updates,
+                            and work together to bring your project
+                            to life.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="faq-item">
+                <button class="faq-question"
+                        type="button"
+                        aria-expanded="false">
+                    <span class="faq-number">09</span>
+                    <span class="faq-question-text">
+                        How can I get started with you?
+                    </span>
+                    <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="faq-answer" aria-hidden="true">
+                    <div class="faq-answer-inner">
+                        <p>
+                            Getting started is simple. Visit my contact
+                            section, fill out the inquiry form, and tell
+                            me a little about your project. I'll review
+                            your message and get back to you so we can
+                            discuss the next steps.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FAQ Bottom CTA -->
+        <div class="faq-bottom">
+            <div class="faq-bottom-text">
+                <h3>Still have questions?</h3>
+                <p>Let's talk about your next big idea.</p>
+            </div>
+
+            <a href="#contact" class="faq-contact-link">
+                Get in touch
+                <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
 <!-- CONTACT SECTION -->
 <section class="contact-section" id="contact">
 
@@ -1271,8 +1801,6 @@
 
 
 
-
-
 <!-- FOOTER -->
 <footer class="site-footer">
 
@@ -1323,6 +1851,27 @@
         publicKey: "WunyhubX_A1hLStLK"
     });
 </script>
+
+
+
+
+
+
+<!-- Supabase library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Supabase configuration -->
+<script>
+    const SUPABASE_URL = "https://wyzjtfnepzucdvqjztbh.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_TM8CyNjLhl5U3GOe_yie-A_M4NjaKjc";
+
+    window.testimonialSupabase = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+    console.log("Supabase initialized:", !!window.testimonialSupabase);
+</script>
+
 
 <script src="js/script.js"></script>
 

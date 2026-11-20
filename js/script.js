@@ -630,74 +630,574 @@ if (copyrightYear) {
 
 
 
+/* =========================================
+   FAQ ACCORDION INTERACTION
+========================================= */
+
+(() => {
+    const faqItems = document.querySelectorAll(".faq-item");
+
+    if (!faqItems.length) return;
+
+    faqItems.forEach((item) => {
+        const question = item.querySelector(".faq-question");
+        const answer = item.querySelector(".faq-answer");
+
+        if (!question || !answer) return;
+
+        question.addEventListener("click", () => {
+            const isCurrentlyOpen = item.classList.contains("is-open");
+
+            // Close all FAQ items first
+            faqItems.forEach((otherItem) => {
+                const otherQuestion =
+                    otherItem.querySelector(".faq-question");
+
+                const otherAnswer =
+                    otherItem.querySelector(".faq-answer");
+
+                otherItem.classList.remove("is-open");
+
+                otherQuestion.setAttribute("aria-expanded", "false");
+                otherAnswer.setAttribute("aria-hidden", "true");
+            });
+
+            // Open the clicked item only if it was previously closed
+            if (!isCurrentlyOpen) {
+                item.classList.add("is-open");
+
+                question.setAttribute("aria-expanded", "true");
+                answer.setAttribute("aria-hidden", "false");
+            }
+        });
+    });
+})();
+
+
+
+
+
+
+
 
 
 /* =========================================
-   ACTIVE NAVIGATION ON SCROLL
+   TESTIMONIALS SECTION
 ========================================= */
 
-/* const navigationLinks = document.querySelectorAll(
-    '.nav-links a[href^="#"], .mobile-nav a[href^="#"]'
-);
+document.addEventListener("DOMContentLoaded", () => {
 
-const pageSections = document.querySelectorAll(
-    "main section[id]"
-);
+    const modal = document.getElementById("testimonialModal");
+    const openBtn = document.getElementById("openTestimonialForm");
+    const emptyBtn = document.getElementById("emptyTestimonialBtn");
+    const closeBtn = document.getElementById("closeTestimonialForm");
+    const overlay = document.getElementById("testimonialModalOverlay");
 
-function setActiveNavigation(sectionId) {
+    const form = document.getElementById("testimonialForm");
+    const ratingInput = document.getElementById("clientRating");
+    const ratingButtons = document.querySelectorAll(
+        ".testimonial-rating-input button"
+    );
 
-    navigationLinks.forEach((link) => {
+    const messageInput = document.getElementById("clientMessage");
+    const charCount = document.getElementById("testimonialCharCount");
 
-        const isActive =
-            link.getAttribute("href") === `#${sectionId}`;
+    const photoInput = document.getElementById("clientPhoto");
+    const fileName = document.getElementById("testimonialFileName");
 
-        link.classList.toggle("active", isActive);
+    const notice = document.getElementById("testimonialFormNotice");
+    const submitBtn = document.getElementById("testimonialSubmitBtn");
 
-        if (isActive) {
-            link.setAttribute("aria-current", "location");
-        } else {
-            link.removeAttribute("aria-current");
-        }
+    const track = document.getElementById("testimonialsTrack");
+    const slider = document.getElementById("testimonialsSlider");
+    const prevBtn = document.getElementById("testimonialPrev");
+    const nextBtn = document.getElementById("testimonialNext");
 
-    });
+    const counter = document.getElementById("testimonialCounter");
+    const progress = document.getElementById("testimonialProgress");
+    const emptyState = document.getElementById("testimonialEmpty");
 
-} */
+    if (!modal || !form || !track) return;
 
-// Highlight the clicked navigation item immediately.
-/* navigationLinks.forEach((link) => {
 
-    link.addEventListener("click", () => {
+    /* -------------------------------------
+       MODAL OPEN AND CLOSE
+    ------------------------------------- */
 
-        const sectionId = link.getAttribute("href").substring(1);
+    function openModal() {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
 
-        setActiveNavigation(sectionId);
-
-    });
-
-}); */
-
-// Update the active item while scrolling.
-/* const sectionObserver = new IntersectionObserver(
-    (entries) => {
-
-        const visibleSections = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort((a, b) =>
-                b.intersectionRatio - a.intersectionRatio
-            );
-
-        if (visibleSections.length > 0) {
-            setActiveNavigation(visibleSections[0].target.id);
-        }
-
-    },
-    {
-        root: null,
-        rootMargin: "-20% 0px -60% 0px",
-        threshold: [0, 0.1, 0.25, 0.5, 0.75]
+        setTimeout(() => {
+            document.getElementById("clientName")?.focus();
+        }, 150);
     }
-);
 
-pageSections.forEach((section) => {
-    sectionObserver.observe(section);
-}); */
+    function closeModal() {
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+    }
+
+    openBtn?.addEventListener("click", openModal);
+    emptyBtn?.addEventListener("click", openModal);
+    closeBtn?.addEventListener("click", closeModal);
+    overlay?.addEventListener("click", closeModal);
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.classList.contains("active")) {
+            closeModal();
+        }
+    });
+
+
+    /* -------------------------------------
+    STAR RATING
+    ------------------------------------- */
+
+    ratingButtons.forEach((button) => {
+
+        // Prevent the star button from submitting the form
+        button.setAttribute("type", "button");
+
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            const selectedRating = Number(button.dataset.rating);
+
+            if (!selectedRating || selectedRating < 1 || selectedRating > 5) {
+                return;
+            }
+
+            ratingInput.value = selectedRating;
+
+            ratingButtons.forEach((star) => {
+                const starRating = Number(star.dataset.rating);
+
+                const isSelected = starRating <= selectedRating;
+
+                star.classList.toggle("selected", isSelected);
+
+                star.setAttribute(
+                    "aria-checked",
+                    String(starRating === selectedRating)
+                );
+            });
+
+            notice.textContent = "";
+        });
+
+    });
+
+
+    /* -------------------------------------
+       CHARACTER COUNTER
+    ------------------------------------- */
+
+    messageInput?.addEventListener("input", () => {
+        charCount.textContent = messageInput.value.length;
+    });
+
+
+    /* -------------------------------------
+       PHOTO FILE NAME + VALIDATION
+    ------------------------------------- */
+
+    photoInput?.addEventListener("change", () => {
+        const file = photoInput.files[0];
+
+        if (!file) {
+            fileName.textContent = "No file selected";
+            return;
+        }
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            photoInput.value = "";
+            fileName.textContent = "No file selected";
+            alert("Please select a JPG, PNG or WebP image.");
+            return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            photoInput.value = "";
+            fileName.textContent = "No file selected";
+            alert("Your photo must be smaller than 2MB.");
+            return;
+        }
+
+        fileName.textContent = file.name;
+    });
+
+
+    /* -------------------------------------
+       SLIDER
+    ------------------------------------- */
+
+    let currentIndex = 0;
+
+    function getCards() {
+        return [...track.querySelectorAll(".testimonial-card")];
+    }
+
+    function getMaxIndex() {
+        const cards = getCards();
+
+        if (!cards.length) return 0;
+
+        const sliderWidth = slider.clientWidth;
+        const trackWidth = track.scrollWidth;
+
+        if (trackWidth <= sliderWidth) return 0;
+
+        const lastCard = cards[cards.length - 1];
+        const lastCardEnd = lastCard.offsetLeft + lastCard.offsetWidth;
+
+        let max = cards.length - 1;
+
+        while (
+            max > 0 &&
+            cards[max].offsetLeft >= lastCardEnd - sliderWidth
+        ) {
+            max--;
+        }
+
+        return Math.max(
+            0,
+            Math.min(max, cards.length - 1)
+        );
+    }
+
+    function updateSlider() {
+        const cards = getCards();
+
+        if (!cards.length) {
+            track.style.transform = "translateX(0)";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            counter.textContent = "01 / 01";
+            progress.style.width = "0%";
+            return;
+        }
+
+        const maxIndex = getMaxIndex();
+        currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+
+        const target = cards[currentIndex];
+
+        if (target) {
+            track.style.transform =
+                `translateX(-${target.offsetLeft}px)`;
+        }
+
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex >= maxIndex;
+
+        const total = Math.max(1, maxIndex + 1);
+        const current = currentIndex + 1;
+
+        counter.textContent =
+            `${String(current).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+
+        progress.style.width = `${(current / total) * 100}%`;
+    }
+
+    prevBtn?.addEventListener("click", () => {
+        currentIndex = Math.max(0, currentIndex - 1);
+        updateSlider();
+    });
+
+    nextBtn?.addEventListener("click", () => {
+        currentIndex = Math.min(getMaxIndex(), currentIndex + 1);
+        updateSlider();
+    });
+
+    window.addEventListener("resize", updateSlider);
+
+
+    /* -------------------------------------
+       PAUSE / RESUME AUTO SLIDING
+    ------------------------------------- */
+
+    let autoSlideTimer;
+
+    function startAutoSlide() {
+        clearInterval(autoSlideTimer);
+
+        autoSlideTimer = setInterval(() => {
+            const maxIndex = getMaxIndex();
+
+            if (maxIndex === 0) return;
+
+            currentIndex =
+                currentIndex >= maxIndex ? 0 : currentIndex + 1;
+
+            updateSlider();
+        }, 5000);
+    }
+
+    slider.addEventListener("mouseenter", () => {
+        clearInterval(autoSlideTimer);
+    });
+
+    slider.addEventListener("mouseleave", startAutoSlide);
+
+    slider.addEventListener("focusin", () => {
+        clearInterval(autoSlideTimer);
+    });
+
+    slider.addEventListener("focusout", startAutoSlide);
+
+
+    /* -------------------------------------
+       TESTIMONIAL CARD CREATION
+    ------------------------------------- */
+
+    function createTestimonialCard(item) {
+        const card = document.createElement("article");
+        card.className = "testimonial-card";
+
+        const top = document.createElement("div");
+        top.className = "testimonial-card-top";
+
+        const quote = document.createElement("div");
+        quote.className = "testimonial-quote-icon";
+        quote.innerHTML = '<i class="fas fa-quote-left"></i>';
+
+        const stars = document.createElement("div");
+        stars.className = "testimonial-stars";
+        stars.setAttribute("aria-label", `${item.rating} out of 5 stars`);
+
+        for (let i = 0; i < 5; i++) {
+            const star = document.createElement("span");
+            star.textContent = i < item.rating ? "★" : "☆";
+            stars.appendChild(star);
+        }
+
+        top.append(quote, stars);
+
+        const message = document.createElement("p");
+        message.className = "testimonial-message";
+        message.textContent = `“${item.message}”`;
+
+        const bottom = document.createElement("div");
+        bottom.className = "testimonial-card-bottom";
+
+        const avatar = document.createElement("div");
+        avatar.className = "testimonial-avatar";
+
+        if (item.image_url) {
+            const image = document.createElement("img");
+            image.src = item.image_url;
+            image.alt = `${item.client_name}'s profile photo`;
+            image.loading = "lazy";
+            image.onerror = () => {
+                image.remove();
+                avatar.textContent =
+                    item.client_name.trim().charAt(0).toUpperCase();
+            };
+            avatar.appendChild(image);
+        } else {
+            avatar.textContent =
+                item.client_name.trim().charAt(0).toUpperCase();
+        }
+
+        const info = document.createElement("div");
+        info.className = "testimonial-client-info";
+
+        const name = document.createElement("strong");
+        name.className = "testimonial-client-name";
+        name.textContent = item.client_name;
+
+        const role = document.createElement("span");
+        role.className = "testimonial-client-role";
+
+        role.textContent = [
+            item.client_role,
+            item.company
+        ].filter(Boolean).join(" · ");
+
+        info.append(name, role);
+        bottom.append(avatar, info);
+
+        card.append(top, message, bottom);
+
+        if (item.project_type) {
+            const tag = document.createElement("span");
+            tag.className = "testimonial-project-tag";
+            tag.textContent = item.project_type;
+            card.appendChild(tag);
+        }
+
+        return card;
+    }
+
+
+    /* -------------------------------------
+       LOAD APPROVED TESTIMONIALS
+    ------------------------------------- */
+
+    async function loadTestimonials() {
+        /*
+          Supabase connection will be added in the next setup step.
+          Until then, the empty state remains visible.
+        */
+
+        if (!window.testimonialSupabase) {
+            updateSlider();
+            return;
+        }
+
+        const { data, error } = await window.testimonialSupabase
+            .from("testimonials")
+            .select("id, client_name, client_role, company, project_type, rating, message, image_url")
+            .eq("status", "approved")
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            console.error("Could not load testimonials:", error);
+            return;
+        }
+
+        track.querySelectorAll(".testimonial-card").forEach(card => {
+            card.remove();
+        });
+
+        if (!data || data.length === 0) {
+            emptyState.hidden = false;
+            updateSlider();
+            return;
+        }
+
+        emptyState.hidden = true;
+
+        data.forEach(item => {
+            track.appendChild(createTestimonialCard(item));
+        });
+
+        currentIndex = 0;
+        updateSlider();
+        startAutoSlide();
+    }
+
+
+    /* -------------------------------------
+       SUBMIT TESTIMONIAL
+    ------------------------------------- */
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const rating = Number(ratingInput.value);
+        const photo = photoInput.files[0];
+
+        if (rating < 1 || rating > 5) {
+            notice.textContent = "Please select a star rating.";
+            return;
+        }
+
+        if (!document.getElementById("testimonialConsent").checked) {
+            notice.textContent = "Please agree before submitting.";
+            return;
+        }
+
+        if (!window.testimonialSupabase) {
+            notice.textContent =
+                "The submission service has not been connected yet. Please try again later.";
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "Submitting...";
+
+        notice.textContent = "Please wait while we submit your testimonial.";
+
+        try {
+            let imageUrl = null;
+
+            if (photo) {
+                const extension = photo.name.split(".").pop().toLowerCase();
+                const filePath =
+                    `${crypto.randomUUID()}.${extension}`;
+
+                const { error: uploadError } =
+                    await window.testimonialSupabase.storage
+                        .from("testimonial-photos")
+                        .upload(filePath, photo, {
+                            cacheControl: "3600",
+                            upsert: false,
+                            contentType: photo.type
+                        });
+
+                if (uploadError) throw uploadError;
+
+                const { data: imageData } =
+                    window.testimonialSupabase.storage
+                        .from("testimonial-photos")
+                        .getPublicUrl(filePath);
+
+                imageUrl = imageData.publicUrl;
+            }
+
+            const testimonial = {
+                client_name: document.getElementById("clientName").value.trim(),
+                client_role: document.getElementById("clientRole").value.trim(),
+                company: document.getElementById("clientCompany").value.trim() || null,
+                project_type: document.getElementById("projectType").value || null,
+                rating,
+                message: messageInput.value.trim(),
+                image_url: imageUrl,
+                status: "pending"
+            };
+
+            const { error } = await window.testimonialSupabase
+                .from("testimonials")
+                .insert([testimonial]);
+
+            if (error) throw error;
+
+            notice.textContent =
+                "Thank you! Your testimonial has been submitted for review.";
+
+            form.reset();
+            ratingInput.value = "0";
+            charCount.textContent = "0";
+            fileName.textContent = "No file selected";
+
+            ratingButtons.forEach(star => {
+                star.classList.remove("selected");
+                star.setAttribute("aria-checked", "false");
+            });
+
+            setTimeout(closeModal, 2200);
+
+        } catch (error) {
+            console.error("Testimonial submission failed:", error);
+            notice.textContent =
+                "Something went wrong. Please try again in a moment.";
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML =
+                '<span>Submit testimonial</span><i class="fas fa-arrow-right"></i>';
+        }
+    });
+
+
+    /* INITIALIZE */
+
+    loadTestimonials();
+
+});
+
+
+
+
+
+
+
