@@ -15,7 +15,7 @@
     const visitorSessionId = crypto.randomUUID();
 
     const functionUrl =
-    "https://wyzjtfnepzucdvqjztbh.supabase.co/functions/v1/quick-processor";
+        "https://wyzjtfnepzucdvqjztbh.supabase.co/functions/v1/quick-processor";
 
     const SUPABASE_PUBLISHABLE_KEY =
         "sb_publishable_TM8CyNjLhl5U3GOe_yie-A_M4NjaKjc";
@@ -54,7 +54,8 @@
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "apikey": SUPABASE_PUBLISHABLE_KEY
+                    "apikey": SUPABASE_PUBLISHABLE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
                 },
                 body: JSON.stringify(payload)
             });
