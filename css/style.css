@@ -3094,20 +3094,37 @@ a {
     padding: 26px;
 }
 
+
 .project-meta {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 13px;
     align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .project-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    line-height: 1.4;
     color: var(--primary);
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 1px;
 }
+
+.project-meta svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+/* Center project metadata on smaller screens */
+@media (max-width: 600px) {
+    .project-meta {
+        align-items: center;
+    }
+}
+
 
 .project-meta span + span::before {
     content: "•";
@@ -3283,6 +3300,57 @@ a {
     height: 14px;
     stroke-width: 1.8;
 }
+
+
+
+
+
+
+/* GRAPHIC DESIGN PROJECT IMAGES */
+
+.graphics-visual {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.graphics-screenshot-frame {
+    width: 100%;
+    height: 300px;
+    max-height: 300px;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.graphics-screenshot-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+
+    object-fit: contain;
+    object-position: center;
+}
+
+/* Smaller screens */
+@media (max-width: 600px) {
+    .graphics-screenshot-frame {
+        height: 220px;
+        max-height: 220px;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+    .graphics-screenshot-frame {
+        height: 180px;
+        max-height: 180px;
+    }
+}
+
 
 
 
