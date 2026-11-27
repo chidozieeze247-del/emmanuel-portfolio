@@ -916,38 +916,18 @@ document.addEventListener("DOMContentLoaded", () => {
        SLIDER
     ------------------------------------- */
 
+
     let currentIndex = 0;
 
     function getCards() {
         return [...track.querySelectorAll(".testimonial-card")];
     }
 
+    // Every testimonial gets its own slider position.
     function getMaxIndex() {
         const cards = getCards();
 
-        if (!cards.length) return 0;
-
-        const sliderWidth = slider.clientWidth;
-        const trackWidth = track.scrollWidth;
-
-        if (trackWidth <= sliderWidth) return 0;
-
-        const lastCard = cards[cards.length - 1];
-        const lastCardEnd = lastCard.offsetLeft + lastCard.offsetWidth;
-
-        let max = cards.length - 1;
-
-        while (
-            max > 0 &&
-            cards[max].offsetLeft >= lastCardEnd - sliderWidth
-        ) {
-            max--;
-        }
-
-        return Math.max(
-            0,
-            Math.min(max, cards.length - 1)
-        );
+        return Math.max(0, cards.length - 1);
     }
 
     function updateSlider() {
@@ -963,25 +943,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const maxIndex = getMaxIndex();
-        currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+
+        currentIndex = Math.max(
+            0,
+            Math.min(currentIndex, maxIndex)
+        );
 
         const target = cards[currentIndex];
 
         if (target) {
+            // Prevent the slider from moving beyond its final card.
+            const maxTranslate = Math.max(
+                0,
+                track.scrollWidth - slider.clientWidth
+            );
+
+            const translateX = Math.min(
+                target.offsetLeft,
+                maxTranslate
+            );
+
             track.style.transform =
-                `translateX(-${target.offsetLeft}px)`;
+                `translateX(-${translateX}px)`;
         }
 
         prevBtn.disabled = currentIndex === 0;
-        nextBtn.disabled = currentIndex >= maxIndex;
+        nextBtn.disabled = currentIndex === maxIndex;
 
-        const total = Math.max(1, maxIndex + 1);
+        const total = cards.length;
         const current = currentIndex + 1;
 
         counter.textContent =
             `${String(current).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
 
-        progress.style.width = `${(current / total) * 100}%`;
+        progress.style.width =
+            `${(current / total) * 100}%`;
     }
 
     prevBtn?.addEventListener("click", () => {
@@ -990,11 +986,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     nextBtn?.addEventListener("click", () => {
-        currentIndex = Math.min(getMaxIndex(), currentIndex + 1);
+        currentIndex = Math.min(
+            getMaxIndex(),
+            currentIndex + 1
+        );
+
         updateSlider();
     });
 
     window.addEventListener("resize", updateSlider);
+
 
 
     /* -------------------------------------

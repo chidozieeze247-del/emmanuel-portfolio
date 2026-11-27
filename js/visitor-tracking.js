@@ -50,15 +50,16 @@
         };
 
         try {
-            const response = await fetch(functionUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_PUBLISHABLE_KEY,
-                    "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
-                },
-                body: JSON.stringify(payload)
-            });
+        const response = await fetch(functionUrl, {
+            method: "POST",
+            keepalive: event === "exit",
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_PUBLISHABLE_KEY,
+                "Authorization": `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+            },
+            body: JSON.stringify(payload)
+        });
 
             if (!response.ok) {
                 throw new Error(await response.text());
@@ -116,19 +117,26 @@
 
         const exitTime = new Date().toISOString();
 
-        const { error } = await visitorSupabase.rpc(
-            "end_portfolio_visit",
-            { p_session_id: visitorSessionId }
-        );
+        // Start the exit notification immediately.
+        const notificationPromise = sendNotification("exit", exitTime);
 
-        if (error) {
-            console.error("Exit recording failed:", error.message);
-            return;
+        // Update the visitor record independently.
+        try {
+            const { error } = await visitorSupabase.rpc(
+                "end_portfolio_visit",
+                { p_session_id: visitorSessionId }
+            );
+
+            if (error) {
+                console.error("Exit recording failed:", error.message);
+            } else {
+                console.log("Visitor exit recorded.");
+            }
+        } catch (error) {
+            console.error("Exit recording failed:", error);
         }
 
-        console.log("Visitor exit recorded.");
-
-        await sendNotification("exit", exitTime);
+        await notificationPromise;
     }
 
     await startVisit();
