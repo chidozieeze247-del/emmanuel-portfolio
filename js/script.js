@@ -383,16 +383,68 @@ updateActiveSection();
 
 
 
+/* DYNAMIC PROJECT NUMBERING */
+
+function updateProjectNumbers() {
+
+    const visibleCards = Array.from(
+        document.querySelectorAll(".project-card")
+    ).filter(card => !card.classList.contains("is-filtered-out"));
+
+    const totalProjects = visibleCards.length;
+
+    visibleCards.forEach((card, index) => {
+
+        const number = card.querySelector(".project-number");
+
+        if (!number) return;
+
+        const currentNumber = String(index + 1).padStart(2, "0");
+        const totalNumber = String(totalProjects).padStart(2, "0");
+
+        number.textContent = `${currentNumber} / ${totalNumber}`;
+
+    });
+
+}
 
 
 
 
 
-/*  PROJECT FILTERS*/
+/* PROJECT FILTERS */
 
 const projectFilterButtons = document.querySelectorAll(".filter-btn");
-const projectCards = document.querySelectorAll(".project-card");
+const projectGrid = document.querySelector(".projects-grid");
 
+// Function to update project numbers
+function updateProjectNumbers() {
+
+    const allProjectCards = document.querySelectorAll(".project-card");
+
+    // Get only the cards currently visible
+    const visibleProjectCards = Array.from(allProjectCards).filter((card) => {
+        return !card.classList.contains("is-filtered-out");
+    });
+
+    const totalProjects = visibleProjectCards.length;
+
+    visibleProjectCards.forEach((card, index) => {
+
+        const projectNumber = card.querySelector(".project-number");
+
+        if (!projectNumber) return;
+
+        const currentNumber = String(index + 1).padStart(2, "0");
+        const totalNumber = String(totalProjects).padStart(2, "0");
+
+        projectNumber.textContent = `${currentNumber} / ${totalNumber}`;
+
+    });
+}
+
+
+// Handle project filter buttons
 projectFilterButtons.forEach((button) => {
 
     button.addEventListener("click", () => {
@@ -401,13 +453,17 @@ projectFilterButtons.forEach((button) => {
 
         // Update active filter button
         projectFilterButtons.forEach((filterButton) => {
+
             const isActive = filterButton === button;
 
             filterButton.classList.toggle("active", isActive);
             filterButton.setAttribute("aria-pressed", String(isActive));
+
         });
 
-        // Show matching project cards
+        // Get all project cards
+        const projectCards = document.querySelectorAll(".project-card");
+
         projectCards.forEach((card) => {
 
             const cardCategory = card.dataset.category;
@@ -418,8 +474,9 @@ projectFilterButtons.forEach((button) => {
 
             card.classList.toggle("is-filtered-out", !shouldShow);
 
-            // Close expanded details when hiding a card
+            // Close details when a card is filtered out
             if (!shouldShow) {
+
                 const detailsButton = card.querySelector(
                     ".project-details-toggle"
                 );
@@ -427,20 +484,33 @@ projectFilterButtons.forEach((button) => {
                 const detailsPanel = card.querySelector(".project-details");
 
                 if (detailsButton && detailsPanel) {
+
                     detailsButton.setAttribute("aria-expanded", "false");
                     detailsPanel.hidden = true;
+
+                    const buttonText = detailsButton.querySelector(
+                        "span:first-child"
+                    );
+
+                    if (buttonText) {
+                        buttonText.textContent = "Explore project";
+                    }
+
                 }
             }
 
         });
+
+        // Update numbering after filtering
+        updateProjectNumbers();
 
     });
 
 });
 
 
-
-
+// Set correct numbering when the page first loads
+updateProjectNumbers();
 
 
 
@@ -489,45 +559,51 @@ serviceToggles.forEach((toggle) => {
 
 
 
-/* PROJECTS SECTION INTERACTIONS */
+/* PROJECT CARD INTERACTIONS */
 
-const projectToggles = document.querySelectorAll(
-    ".project-details-toggle"
-);
+const projectsGrid = document.querySelector(".projects-grid");
 
-projectToggles.forEach((toggle) => {
+if (projectsGrid) {
+    projectsGrid.addEventListener("click", (event) => {
 
-    toggle.addEventListener("click", () => {
+        // 1. Handle the Explore Project button
+        const toggle = event.target.closest(".project-details-toggle");
 
-        const detailsId = toggle.getAttribute("aria-controls");
-        const details = document.getElementById(detailsId);
+        if (toggle) {
+            const detailsId = toggle.getAttribute("aria-controls");
+            const details = document.getElementById(detailsId);
 
-        if (!details) return;
+            if (!details) return;
 
-        const isExpanded =
-            toggle.getAttribute("aria-expanded") === "true";
+            const isExpanded =
+                toggle.getAttribute("aria-expanded") === "true";
 
-        toggle.setAttribute(
-            "aria-expanded",
-            String(!isExpanded)
-        );
+            toggle.setAttribute("aria-expanded", String(!isExpanded));
+            details.hidden = isExpanded;
 
-        details.hidden = isExpanded;
+            const buttonText = toggle.querySelector("span:first-child");
 
-        const buttonText = toggle.querySelector("span:first-child");
+            if (buttonText) {
+                buttonText.textContent = isExpanded
+                    ? "Explore project"
+                    : "Show less";
+            }
 
-        if (buttonText) {
-            buttonText.textContent = isExpanded
-                ? "Explore project"
-                : "Show less";
+            return;
         }
 
+        // 2. Handle clicking anywhere on a project card
+        const card = event.target.closest(".project-card");
+
+        if (!card) return;
+
+        const projectLink = card.dataset.link;
+
+        if (projectLink) {
+            window.open(projectLink, "_blank", "noopener,noreferrer");
+        }
     });
-
-});
-
-
-
+}
 
 
 

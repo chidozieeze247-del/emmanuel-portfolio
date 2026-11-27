@@ -2475,6 +2475,7 @@ a {
     box-shadow: var(--shadow);
     transition: transform .35s ease, border-color .35s ease,
                 box-shadow .35s ease, opacity .3s ease;
+    cursor: pointer;
 }
 
 .project-card:hover {
@@ -3098,6 +3099,7 @@ a {
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 13px;
+    align-items: center;
 }
 
 .project-meta span {
@@ -3262,6 +3264,54 @@ a {
     background: var(--primary-hover);
 }
 
+
+
+.project-arrow svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.8;
+}
+
+.project-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.project-meta svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.8;
+}
+
+
+
+
+
+
+
+
+/* GRAPHIC DESIGN IMAGE FRAME */
+
+.graphics-screenshot-frame {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 360px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+}
+
+.graphics-screenshot-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
+}
 
 
 
