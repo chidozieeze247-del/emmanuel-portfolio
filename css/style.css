@@ -5356,3 +5356,55 @@ a {
         transition: none !important;
     }
 }
+
+
+
+/* TESTIMONIAL CARDS - MOBILE RESPONSIVENESS */
+@media (max-width: 600px) {
+
+    .testimonials-container {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .testimonials-slider-wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .testimonials-slider {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 8px;
+    }
+
+    .testimonials-track {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .testimonial-card {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .testimonial-card * {
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: anywhere;
+    }
+}
